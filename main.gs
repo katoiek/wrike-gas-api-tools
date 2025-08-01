@@ -86,6 +86,8 @@ function onOpen() {
     .addItem('⑤Update to Collaborator', 'updateUsertoCollaborator')
     .addItem('⑥ユーザー一括招待シート作成', 'initBulkUserInviteSheet')
     .addItem('⑦ユーザー一括招待実行', 'bulkInviteUsers')
+    .addItem('⑧カスタムフィールドコピー', 'showCopyCustomFieldsDialog')
+    .addItem('🔧SpaceIDテスト', 'testGetSpaceId')
     // .addItem('Update to User', 'updateUsertoUser')
     .addItem('ログアウト', 'logout')
     .addToUi();
@@ -127,8 +129,8 @@ function onOpen() {
  */
 function createModelessDialog(html, title) {
   const htmlOutput = HtmlService.createHtmlOutput(html)
-    .setWidth(360)
-    .setHeight(120);
+    .setWidth(500)
+    .setHeight(300);
   SpreadsheetApp.getUi().showModelessDialog(htmlOutput, title);
 }
 

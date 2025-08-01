@@ -52,37 +52,15 @@ function getAllCustomFields() {
     resultSheet.getRange(1, index + 1).setValue(header);
   });
 
-  // spaceIdでデータをグループ化
-  const groupedData = {};
-  data.forEach(item => {
+  data.forEach((item, index) => {
     const flatItem = flattenObject(item);
-    const spaceId = flatItem.spaceId || 'undefined';
-
-    if (!groupedData[spaceId]) {
-      groupedData[spaceId] = [];
-    }
-    groupedData[spaceId].push(flatItem);
-  });
-
-  let currentRow = 2;
-
-  // spaceIdごとにデータを出力
-  Object.keys(groupedData).sort().forEach(spaceId => {
-    // spaceIdのヘッダー行を追加
-    resultSheet.getRange(currentRow, 1).setValue(`${spaceId}`);
-    resultSheet.getRange(currentRow, 1, 1, headers.length).setBackground('#E6F3FF');
-    resultSheet.getRange(currentRow, 1, 1, headers.length).setFontWeight('bold');
-    currentRow++;
-
-    // このspaceIdのデータを出力
-    groupedData[spaceId].forEach(flatItem => {
-      headers.forEach((header, colIndex) => {
-        resultSheet.getRange(currentRow, colIndex + 1).setValue(flatItem[header] || null);
-      });
-      currentRow++;
+    headers.forEach((header, colIndex) => {
+      let value = flatItem[header] || null;
+      // spaceIdがnullまたは空の場合は「アカウント」と表示
+      if (header === 'spaceId' && (!value || value === null)) {
+        value = 'アカウント';
+      }
+      resultSheet.getRange(index + 2, colIndex + 1).setValue(value);
     });
-
-    // 空行を追加してグループを区切る
-    currentRow++;
   });
 }
