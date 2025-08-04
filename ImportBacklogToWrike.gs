@@ -47,7 +47,7 @@ function ImportBacklogToWrike() {
 
     // コメント列のインデックスを取得
     const commentIndices = [];
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 200; i++) {
       const commentIndex = headers.indexOf(`コメント${i}`);
       if (commentIndex !== -1) {
         commentIndices.push(commentIndex);
