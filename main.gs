@@ -1,10 +1,13 @@
 const scriptProperties = PropertiesService.getScriptProperties();
 // const service = getService_();
 
+/**
+ * Register API keys and parameters from spreadsheet / スプレッドシートからAPIキーとパラメータを登録する
+ */
 function registKeys() {
-  scriptProperties.deleteAllProperties(); //スクリプトプロパティの初期化 Initialize script properties
+  scriptProperties.deleteAllProperties(); // Initialize script properties / スクリプトプロパティの初期化
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var parametersSheet = spreadsheet.getSheetByName('parameters'); // パラメーターシートの指定 Specify parameter sheet
+  var parametersSheet = spreadsheet.getSheetByName('parameters'); // Specify parameters sheet / パラメーターシートの指定
   scriptProperties.setProperty('api_url', parametersSheet.getRange('B1').getValue());
   scriptProperties.setProperty('client_id', parametersSheet.getRange('B2').getValue());
   scriptProperties.setProperty('client_secret', parametersSheet.getRange('B3').getValue());
@@ -23,6 +26,10 @@ function registKeys() {
   // console.log('param check\n' + scriptProperties.getProperty('token'));
 }
 
+/**
+ * Create OAuth2 service for Wrike API / Wrike API用のOAuth2サービスを作成する
+ * @return {OAuth2Service} OAuth2 service instance / OAuth2サービスインスタンス
+ */
 function getService_() {
   return OAuth2.createService('Wrike')
     .setAuthorizationBaseUrl(scriptProperties.getProperty('auth_url'))
@@ -35,14 +42,14 @@ function getService_() {
 }
 
 /**
- * トークンの状態をチェックする関数
+ * Check token status / トークンの状態をチェックする関数
  *
- * @return {Object} トークンの状態 {isValid: boolean, message: string}
+ * @return {Object} Token status {isValid: boolean, message: string} / トークンの状態 {isValid: boolean, message: string}
  */
 function checkTokenStatus() {
   try {
-    // スクリプトプロパティからトークンを取得
-    registKeys(); // パラメータを最新化
+    // Get token from script properties / スクリプトプロパティからトークンを取得
+    registKeys(); // Update parameters / パラメータを最新化
 
     const service = getService_();
     const hasAccess = service.hasAccess();
@@ -54,7 +61,7 @@ function checkTokenStatus() {
       };
     }
 
-    // トークンを取得してスクリプトプロパティに保存
+    // Get token and save to script properties / トークンを取得してスクリプトプロパティに保存
     const token = service.getAccessToken();
     scriptProperties.setProperty('token', token);
 
@@ -72,10 +79,10 @@ function checkTokenStatus() {
 }
 
 /**
- * スプレッドシートが開かれたときに実行される関数
+ * Function executed when spreadsheet is opened / スプレッドシートが開かれたときに実行される関数
  */
 function onOpen() {
-  // メニューの作成
+  // Create menu / メニューの作成
   SpreadsheetApp.getUi()
     .createMenu('Wrike API連携')
     .addItem('⓪Wrike認証', 'showAuth')
@@ -92,19 +99,19 @@ function onOpen() {
     .addItem('ログアウト', 'logout')
     .addToUi();
 
-  // コールバックURLの設定
+  // Set callback URL / コールバックURLの設定
   const scriptId = ScriptApp.getScriptId();
   const url = `https://script.google.com/macros/d/${scriptId}/usercallback`;
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName('parameters');
   sheet.getRange("B11").setValue(url);
 
-  // 自動認証処理
+  // Automatic authentication process / 自動認証処理
   try {
     const tokenStatus = checkTokenStatus();
 
     if (!tokenStatus.isValid) {
-      // トークンが無効な場合はメッセージを表示
+      // Display message if token is invalid / トークンが無効な場合はメッセージを表示
       const ui = SpreadsheetApp.getUi();
       const response = ui.alert(
         'Wrike API認証が必要です',
@@ -122,10 +129,10 @@ function onOpen() {
 }
 
 /**
- * モーダレスダイアログを作成する関数
+ * Create modeless dialog / モーダレスダイアログを作成する関数
  *
- * @param {string} html - ダイアログに表示するHTML
- * @param {string} title - ダイアログのタイトル
+ * @param {string} html - HTML to display in dialog / ダイアログに表示するHTML
+ * @param {string} title - Dialog title / ダイアログのタイトル
  */
 function createModelessDialog(html, title) {
   const htmlOutput = HtmlService.createHtmlOutput(html)
@@ -135,7 +142,7 @@ function createModelessDialog(html, title) {
 }
 
 /**
- * Wrike API認証を行う関数
+ * Perform Wrike API authentication / Wrike API認証を行う関数
  */
 function showAuth() {
   try {

@@ -1,3 +1,9 @@
+/**
+ * Flatten nested objects into a single level object / ネストされたオブジェクトを単一レベルのオブジェクトに平坦化する
+ * @param {Object} obj - Object to flatten / 平坦化するオブジェクト
+ * @param {string} prefix - Prefix for keys / キーのプレフィックス
+ * @return {Object} Flattened object / 平坦化されたオブジェクト
+ */
 function flattenObject(obj, prefix = '') {
   let result = {};
 
@@ -17,14 +23,20 @@ function flattenObject(obj, prefix = '') {
   return result;
 }
 
+/**
+ * Clear the GetAllContacts sheet / GetAllContactsシートをクリアする
+ */
 function clearGetAllContactsSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName('GetAllContacts');
   if (sheet.getLastRow() > 0) {
-    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();
+    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();  // Clear 12 columns / 12列分をクリア
   }
 }
 
+/**
+ * Get all contacts from Wrike API and write to spreadsheet / Wrike APIから全コンタクトを取得してスプレッドシートに書き込む
+ */
 function GetAllContacts() {
   clearGetAllContactsSheet();
 
@@ -48,6 +60,7 @@ function GetAllContacts() {
   const headers = ['id', 'firstName', 'lastName', 'type', 'profiles', 'avatarUrl', 'timezone',
                    'locale', 'deleted', 'title', 'primaryEmail'];
 
+  // Set title row / タイトル行を設定
   headers.forEach((header, index) => {
     resultSheet.getRange(1, index + 1).setValue(header);
   });

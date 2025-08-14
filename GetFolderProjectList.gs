@@ -1,3 +1,9 @@
+/**
+ * Flatten nested objects into a single level object / ネストされたオブジェクトを単一レベルのオブジェクトに平坦化する
+ * @param {Object} obj - Object to flatten / 平坦化するオブジェクト
+ * @param {string} prefix - Prefix for keys / キーのプレフィックス
+ * @return {Object} Flattened object / 平坦化されたオブジェクト
+ */
 function flattenObject(obj, prefix = '') {
   let result = {};
 
@@ -17,14 +23,20 @@ function flattenObject(obj, prefix = '') {
   return result;
 }
 
+/**
+ * Clear the GetFolderProjectList sheet / GetFolderProjectListシートをクリアする
+ */
 function clearGetFolderProjectListSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName('GetFolderProjectList'); // 'GetFolderProjectList'という名前のシートを取得
+  const sheet = ss.getSheetByName('GetFolderProjectList'); // Get sheet named 'GetFolderProjectList' / 'GetFolderProjectList'という名前のシートを取得
   if (sheet.getLastRow() > 0) {
-    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();  // 12列分をクリア
+    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();  // Clear 12 columns / 12列分をクリア
   }
 }
 
+/**
+ * Get folder and project list from Wrike API and write to spreadsheet / Wrike APIからフォルダとプロジェクト一覧を取得してスプレッドシートに書き込む
+ */
 function getFolderProjectList() {
   clearGetFolderProjectListSheet();
 
@@ -44,22 +56,22 @@ function getFolderProjectList() {
   const data = myJson.data;
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const resultSheet = ss.getSheetByName('GetFolderProjectList'); // 'GetFolderProjectList'という名前のシートを取得
+  const resultSheet = ss.getSheetByName('GetFolderProjectList'); // Get sheet named 'GetFolderProjectList' / 'GetFolderProjectList'という名前のシートを取得
 
   const headers = ['id', 'accountId', 'title', 'createdDate', 'updatedDate', 'description', 'sharedIds',
                    'parentIds', 'childIds', 'scope', 'permalink', 'workflowId'];
 
-  // タイトル行を設定
+  // Set title row / タイトル行を設定
   headers.forEach((header, index) => {
-    // 列は0から始まらず1から始まるため、indexに1を足します
+    // Columns start from 1, not 0, so add 1 to index / 列は0から始まらず1から始まるため、indexに1を足します
     resultSheet.getRange(1, index + 1).setValue(header);
   });
 
   data.forEach((item, index) => {
     const flatItem = flattenObject(item);
     headers.forEach((header, colIndex) => {
-      // 行番号はタイトル行を考慮して配列のindexに2を足します(JavaScriptは0から始まり、タイトル行をスキップするため)
-      // 列番号は0から始まらず1から始まるため、colIndexに1を足します
+      // Row number adds 2 to array index considering title row (JavaScript starts from 0, skip title row) / 行番号はタイトル行を考慮して配列のindexに2を足します(JavaScriptは0から始まり、タイトル行をスキップするため)
+      // Column number starts from 1, not 0, so add 1 to colIndex / 列番号は0から始まらず1から始まるため、colIndexに1を足します
       resultSheet.getRange(index + 2, colIndex + 1).setValue(flatItem[header] || null);
     });
   });

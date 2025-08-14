@@ -1,3 +1,9 @@
+/**
+ * Flatten nested objects into a single level object / ネストされたオブジェクトを単一レベルのオブジェクトに平坦化する
+ * @param {Object} obj - Object to flatten / 平坦化するオブジェクト
+ * @param {string} prefix - Prefix for keys / キーのプレフィックス
+ * @return {Object} Flattened object / 平坦化されたオブジェクト
+ */
 function flattenObject(obj, prefix = '') {
   let result = {};
 
@@ -17,14 +23,20 @@ function flattenObject(obj, prefix = '') {
   return result;
 }
 
+/**
+ * Clear the GetUsertypeList sheet / GetUsertypeListシートをクリアする
+ */
 function clearGetUsertypeListSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName('GetUsertypeList'); // 'GetUsertypeList'という名前のシートを取得
+  const sheet = ss.getSheetByName('GetUsertypeList'); // Get sheet named 'GetUsertypeList' / 'GetUsertypeList'という名前のシートを取得
   if (sheet.getLastRow() > 0) {
-    sheet.getRange(1, 1, sheet.getLastRow(), 10).clearContent();  // 10列分をクリア
+    sheet.getRange(1, 1, sheet.getLastRow(), 10).clearContent();  // Clear 10 columns / 10列分をクリア
   }
 }
 
+/**
+ * Get user type list from Wrike API and write to spreadsheet / Wrike APIからユーザータイプ一覧を取得してスプレッドシートに書き込む
+ */
 function getUsertypeList() {
   clearGetUsertypeListSheet();
 
@@ -44,22 +56,22 @@ function getUsertypeList() {
   const data = myJson.data;
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const resultSheet = ss.getSheetByName('GetUsertypeList'); // 'GetUsertypeList'という名前のシートを取得
+  const resultSheet = ss.getSheetByName('GetUsertypeList'); // Get sheet named 'GetUsertypeList' / 'GetUsertypeList'という名前のシートを取得
 
-  // User Typesで想定されるヘッダー（実際のAPIレスポンスに応じて調整が必要）
+  // Expected headers for User Types (may need adjustment based on actual API response) / User Typesで想定されるヘッダー（実際のAPIレスポンスに応じて調整が必要）
   const headers = ['id', 'title', 'description'];
 
-  // タイトル行を設定
+  // Set title row / タイトル行を設定
   headers.forEach((header, index) => {
-    // 列は0から始まらず1から始まるため、indexに1を足します
+    // Columns start from 1, not 0, so add 1 to index / 列は0から始まらず1から始まるため、indexに1を足します
     resultSheet.getRange(1, index + 1).setValue(header);
   });
 
   data.forEach((item, index) => {
     const flatItem = flattenObject(item);
     headers.forEach((header, colIndex) => {
-      // 行番号はタイトル行を考慮して配列のindexに2を足します(JavaScriptは0から始まり、タイトル行をスキップするため)
-      // 列番号は0から始まらず1から始まるため、colIndexに1を足します
+      // Row number adds 2 to array index considering title row (JavaScript starts from 0, skip title row) / 行番号はタイトル行を考慮して配列のindexに2を足します(JavaScriptは0から始まり、タイトル行をスキップするため)
+      // Column number starts from 1, not 0, so add 1 to colIndex / 列番号は0から始まらず1から始まるため、colIndexに1を足します
       resultSheet.getRange(index + 2, colIndex + 1).setValue(flatItem[header] || null);
     });
   });

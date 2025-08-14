@@ -1,3 +1,9 @@
+/**
+ * Flatten nested objects into a single level object / ネストされたオブジェクトを単一レベルのオブジェクトに平坦化する
+ * @param {Object} obj - Object to flatten / 平坦化するオブジェクト
+ * @param {string} prefix - Prefix for keys / キーのプレフィックス
+ * @return {Object} Flattened object / 平坦化されたオブジェクト
+ */
 function flattenObject(obj, prefix = '') {
   let result = {};
 
@@ -17,14 +23,20 @@ function flattenObject(obj, prefix = '') {
   return result;
 }
 
+/**
+ * Clear the GetAllCustomFields sheet / GetAllCustomFieldsシートをクリアする
+ */
 function clearGetAllCustomFieldsSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName('GetAllCustomFields');
   if (sheet.getLastRow() > 0) {
-    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();
+    sheet.getRange(1, 1, sheet.getLastRow(), 12).clearContent();  // Clear 12 columns / 12列分をクリア
   }
 }
 
+/**
+ * Get all custom fields from Wrike API and write to spreadsheet / Wrike APIから全カスタムフィールドを取得してスプレッドシートに書き込む
+ */
 function getAllCustomFields() {
   clearGetAllCustomFieldsSheet();
 
@@ -48,6 +60,7 @@ function getAllCustomFields() {
   const headers = ['id', 'accountId', 'title', 'type', 'spaceId', 'sharedIds', 'scope',
                    'currency', 'aggregation', 'decimalPlaces', 'useThousandsSeparator', 'readOnly'];
 
+  // Set title row / タイトル行を設定
   headers.forEach((header, index) => {
     resultSheet.getRange(1, index + 1).setValue(header);
   });
@@ -56,7 +69,7 @@ function getAllCustomFields() {
     const flatItem = flattenObject(item);
     headers.forEach((header, colIndex) => {
       let value = flatItem[header] || null;
-      // spaceIdがnullまたは空の場合は「アカウント」と表示
+      // Display "Account" if spaceId is null or empty / spaceIdがnullまたは空の場合は「アカウント」と表示
       if (header === 'spaceId' && (!value || value === null)) {
         value = 'アカウント';
       }
