@@ -30,3 +30,10 @@ Thumbs.db
 
 # notes
 notes/
+
+# etc
+.vscode/
+
+# AI agent files
+CLAUDE.node_modules
+.zencoder/
