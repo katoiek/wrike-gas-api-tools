@@ -14,8 +14,6 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 ## Structure
 
 - **/*.gs**: Google Apps Script files (separated by functionality)
-- **notes/**: Project-related notes and supplementary information
-- **.vscode/**: VSCode configuration files
 
 ## Language & Runtime
 
@@ -143,8 +141,6 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 ## 構成
 
 - **/*.gs**: Google Apps Scriptファイル（各機能ごとに分割）
-- **notes/**: プロジェクト関連のメモや補足情報
-- **.vscode/**: VSCode設定ファイル
 
 ## 言語とランタイム
 

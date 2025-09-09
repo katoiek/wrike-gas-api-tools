@@ -91,6 +91,8 @@ function onOpen() {
     .addItem('③スペース一覧取得', 'getSpaceList')
     .addItem('④フォルダ＆スペース一覧取得', 'GetFolderProjectList')
     .addItem('⑤Update to Collaborator', 'updateUsertoCollaborator')
+    .addItem('⑤-2 Update to Viewer', 'UpdateUsertoViewer')
+    .addItem('⑤-3 Email→UserID取得のみ', 'getUserIdFromEmailsOnly')
     .addItem('⑥ユーザー一括招待シート作成', 'initBulkUserInviteSheet')
     .addItem('⑦ユーザー一括招待実行', 'bulkInviteUsers')
     .addItem('⑧カスタムフィールドコピー', 'showCopyCustomFieldsDialog')
