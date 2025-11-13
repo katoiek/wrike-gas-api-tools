@@ -40,6 +40,8 @@ function ImportBacklogToWrike() {
     const headers = backlogSheet.getRange(2, 1, 1, lastCol).getValues()[0];
     const titleIndex = headers.indexOf('件名');
     const descriptionIndex = headers.indexOf('詳細');
+    const startDateIndex = headers.indexOf('開始日');
+    const dueDateIndex = headers.indexOf('期限日');
 
     if (titleIndex === -1) {
       throw new Error('件名列が見つかりません');
@@ -99,8 +101,12 @@ function ImportBacklogToWrike() {
         // \\nを<br />に置き換え
         description = description.replace(/\\\\n/g, '<br />');
 
+        // 開始日と期限日を取得
+        const startDate = startDateIndex !== -1 ? row[startDateIndex] : undefined;
+        const dueDate = dueDateIndex !== -1 ? row[dueDateIndex] : undefined;
+
         // Wrikeタスクを作成
-        const taskData = createWrikeTask(folderId, title, description);
+        const taskData = createWrikeTask(folderId, title, description, startDate, dueDate);
 
         if (taskData) {
           successCount++;
@@ -193,13 +199,49 @@ function extractFolderIdFromPermalink(permalink) {
 }
 
 /**
+ * 日付文字列を変換（YYYY/MM/DD → YYYY-MM-DD）
+ * @param {string|Date} dateValue - 日付値
+ * @return {string|null} YYYY-MM-DD形式の日付文字列、無効な場合はnull
+ */
+function convertDateFormat(dateValue) {
+  if (!dateValue) {
+    return null;
+  }
+
+  let dateStr = '';
+  
+  if (dateValue instanceof Date) {
+    const year = dateValue.getFullYear();
+    const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+    const day = String(dateValue.getDate()).padStart(2, '0');
+    dateStr = `${year}-${month}-${day}`;
+  } else {
+    dateStr = dateValue.toString().trim();
+    
+    if (/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(dateStr)) {
+      const parts = dateStr.split('/');
+      const year = parts[0];
+      const month = String(parts[1]).padStart(2, '0');
+      const day = String(parts[2]).padStart(2, '0');
+      dateStr = `${year}-${month}-${day}`;
+    } else {
+      return null;
+    }
+  }
+  
+  return dateStr;
+}
+
+/**
  * Wrikeタスクを作成
  * @param {string} folderId - 作成先フォルダID
  * @param {string} title - タスクタイトル
  * @param {string} description - タスク詳細
+ * @param {string|Date} startDate - 開始日（YYYY/MM/DD形式またはDate、オプション）
+ * @param {string|Date} dueDate - 期限日（YYYY/MM/DD形式またはDate、オプション）
  * @return {Object|null} 作成されたタスクデータ
  */
-function createWrikeTask(folderId, title, description) {
+function createWrikeTask(folderId, title, description, startDate = undefined, dueDate = undefined) {
   try {
     const scriptProperties = PropertiesService.getScriptProperties();
     const apiUrl = scriptProperties.getProperty('api_url');
@@ -216,6 +258,26 @@ function createWrikeTask(folderId, title, description) {
       title: title,
       description: description
     };
+
+    // 開始日と期限日を変換して追加
+    const convertedStartDate = convertDateFormat(startDate);
+    const convertedDueDate = convertDateFormat(dueDate);
+
+    if (convertedStartDate && convertedDueDate) {
+      payload.dates = {
+        start: convertedStartDate,
+        due: convertedDueDate
+      };
+    } else if (convertedStartDate && !convertedDueDate) {
+      payload.dates = {
+        start: convertedStartDate,
+        due: convertedStartDate
+      };
+    } else if (!convertedStartDate && convertedDueDate) {
+      payload.dates = {
+        due: convertedDueDate
+      };
+    }
 
     // API リクエスト
     const response = UrlFetchApp.fetch(endpoint, {

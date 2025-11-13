@@ -93,10 +93,10 @@ function onOpen() {
     .addItem('⑤Get User all user tipe', 'GetUsertypeList')
     .addItem('⑤Update to Collaborator', 'updateUsertoCollaborator')
     .addItem('⑤-2 Bulk Update to Viewer', 'UpdateUsertoViewer')
-    .addItem('⑤-3 Email→UserID取得のみ', 'getUserIdFromEmailsOnly')
     .addItem('⑥ユーザー一括招待シート作成', 'initBulkUserInviteSheet')
     .addItem('⑦ユーザー一括招待実行', 'bulkInviteUsers')
     .addItem('⑧スペース間のカスタムフィールドコピー', 'showCopyCustomFieldsDialog')
+    .addItem('⑨Backlog→Wrike インポート', 'ImportBacklogToWrike')
     // .addItem('🔧SpaceIDテスト', 'testGetSpaceId')
     .addItem('ログアウト', 'logout')
     .addToUi();
