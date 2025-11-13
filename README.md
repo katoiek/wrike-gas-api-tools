@@ -5,10 +5,13 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 ## Features
 
 - **Authentication Management**: OAuth2 authentication for Wrike API
-- **User Management**: User ID retrieval, bulk user invitation, permission changes
+- **Data Import**: Import Backlog data as Wrike tasks
+- **User Management**: User ID retrieval, bulk user invitation, permission changes, role conversion (to Collaborator or Viewer), bulk group assignment
+- **User Type Management**: Retrieve user type lists and user role information
+- **Group Management**: Add users to groups and manage group permissions
 - **Folder/Project Management**: Retrieve folder and project lists
 - **Space Management**: Retrieve space lists
-- **Custom Field Operations**: Copy and manage custom fields
+- **Custom Field Operations**: Copy and manage custom fields between spaces
 - **Contact Management**: Retrieve all contacts and user information
 
 ## Structure
@@ -24,15 +27,18 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 ## Key Files
 
 - **main.gs**: Main script, authentication processing, menu setup
-- **BulkInviteUsers.gs**: Bulk user invitation functionality
-- **GetUserIdv4.gs**: User ID retrieval (API v2 to v4 conversion)
+- **ImportBacklogToWrike.gs**: Import Backlog data as Wrike tasks with full column mapping
+- **BulkInviteUsers.gs**: Bulk user invitation functionality with role assignment
+- **UpdateUsertoCollaborator.gs**: Bulk user role conversion to Collaborator role
+- **UpdateUsertoViewer.gs**: Bulk user role conversion to Viewer role and automatic group assignment
+- **GetUserIdv4.gs**: User ID retrieval and conversion (API v2 to v4 format)
 - **GetFolderProjectList.gs**: Folder and project list retrieval
 - **GetSpaceList.gs**: Space list retrieval
-- **GetAllCustomFields.gs**: Custom field list retrieval
-- **CopyCF.gs**: Custom field copy functionality
+- **GetAllCustomFields.gs**: Custom field list retrieval with metadata
+- **CopyCF.gs**: Custom field copy functionality between spaces
 - **GetAllContacts.gs**: Contact list retrieval
 - **Get Information about me.gs**: Current user information retrieval
-- **GetUsertypeList.gs**: User type list retrieval
+- **GetUsertypeList.gs**: User type and role list retrieval
 
 ## Setup
 
@@ -41,6 +47,7 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 Create a new Google Spreadsheet and add the following sheets:
 
 - **parameters**: API connection settings
+- **BacklogData**: Backlog import data (optional, for Backlog to Wrike import)
 - **BulkUserInvite**: Bulk user invitation sheet
 - **Userlist**: User ID conversion sheet
 - **GetSpaceList**: Space list output
@@ -85,19 +92,44 @@ In the **parameters** sheet, set up the following configuration in column B:
 2. The "Wrike API連携" menu will appear
 3. Click "⓪Wrike認証" to authenticate with Wrike API
 
+### Importing Backlog Data to Wrike
+
+To import Backlog data as Wrike tasks:
+
+1. Create a **BacklogData** sheet in your spreadsheet
+2. In cell **B1**, paste the Wrike folder permalink where tasks should be created
+3. Add headers in row 2, including required columns:
+   - **件名** (Title) - Required
+   - **詳細** (Description) - Optional
+   - **コメント1, コメント2, ...** (Comments) - Optional (up to 200 comment columns supported)
+4. Add your Backlog data starting from row 3
+5. Call the `ImportBacklogToWrike()` function to import
+   - Function is available as part of the script but needs to be called manually from Script Editor or via custom menu item
+
+Example structure:
+```
+B1: https://www.wrike.com/folder/123456789
+Row 2: 件名 | 詳細 | コメント1 | コメント2 | ...
+Row 3+: Task data...
+```
+
 ### Available Functions
 
 The following functions are available through the spreadsheet menu:
 
-- **⓪Wrike認証**: Wrike API authentication
-- **①テスト用My Id Info**: Get current user information (for testing)
-- **②UserIDv4取得**: Convert user IDs from API v2 to v4 format
-- **③スペース一覧取得**: Retrieve space list
-- **④フォルダ＆スペース一覧取得**: Retrieve folder and project list
-- **⑤Update to Collaborator**: Update user permissions to collaborator
-- **⑥ユーザー一括招待シート作成**: Create bulk user invitation sheet
-- **⑦ユーザー一括招待実行**: Execute bulk user invitation
-- **⑧カスタムフィールドコピー**: Copy custom fields
+- **⓪Wrike認証**: Authenticate with Wrike API using OAuth2
+- **①テスト用My Id Info**: Get current user information (for testing purposes)
+- **②UserIDv4取得**: Convert user IDs from API v2 to v4 format using email addresses
+- **③スペース一覧取得**: Retrieve list of all spaces in Wrike
+- **④フォルダ＆スペース一覧取得**: Retrieve folder and project lists with hierarchy
+- **⑤Get User all user type**: Get all user types and roles in the system
+- **⑤Update to Collaborator**: Bulk update user roles to Collaborator
+- **⑤-2 Bulk Update to Viewer**: Bulk update user roles to Viewer and add to specified group
+- **⑤-3 Email→UserID取得のみ**: Extract user IDs from email addresses only (no role update)
+- **⑥ユーザー一括招待シート作成**: Initialize and create bulk user invitation sheet
+- **⑦ユーザー一括招待実行**: Execute bulk user invitations with role assignment
+- **⑧スペース間のカスタムフィールドコピー**: Copy custom fields between spaces
+- **ログアウト**: Logout and clear authentication token
 
 ## Configuration Requirements
 
@@ -168,6 +200,7 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 新しいGoogleスプレッドシートを作成し、以下のシートを追加してください：
 
 - **parameters**: API接続設定
+- **BacklogData**: Backlogインポートデータ（オプション、Backlog→Wrikeインポート用）
 - **BulkUserInvite**: ユーザー一括招待用シート
 - **Userlist**: ユーザーID変換用シート
 - **GetSpaceList**: スペース一覧出力用
@@ -212,19 +245,44 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 2. 「Wrike API連携」メニューが表示される
 3. 「⓪Wrike認証」をクリックしてWrike APIで認証
 
+### Backlogデータをwrikeにインポート
+
+BacklogのデータをWrikeのタスクとしてインポートするには：
+
+1. スプレッドシートに **BacklogData** シートを作成
+2. セル **B1** にタスクを作成するWrikeフォルダのパーマリンクを貼り付け
+3. 2行目にヘッダーを追加（必須列を含む）：
+   - **件名** (タイトル) - 必須
+   - **詳細** (説明) - オプション
+   - **コメント1, コメント2, ...** (コメント) - オプション（最大200列まで対応）
+4. 3行目からBacklogデータを追加
+5. `ImportBacklogToWrike()` 関数を呼び出してインポート
+   - この関数はスクリプトに含まれており、スクリプトエディタからまたはカスタムメニュー項目経由で手動で呼び出す必要があります
+
+例：
+```
+B1: https://www.wrike.com/folder/123456789
+2行目: 件名 | 詳細 | コメント1 | コメント2 | ...
+3行目以降: タスクデータ...
+```
+
 ### 利用可能な機能
 
 スプレッドシートのメニューから以下の機能が利用できます：
 
-- **⓪Wrike認証**: Wrike API認証
+- **⓪Wrike認証**: OAuth2を使用してWrike APIで認証
 - **①テスト用My Id Info**: 現在のユーザー情報取得（テスト用）
-- **②UserIDv4取得**: ユーザーIDをAPI v2からv4形式に変換
-- **③スペース一覧取得**: スペース一覧の取得
-- **④フォルダ＆スペース一覧取得**: フォルダとプロジェクト一覧の取得
-- **⑤Update to Collaborator**: ユーザー権限をコラボレーターに更新
-- **⑥ユーザー一括招待シート作成**: ユーザー一括招待用シートの作成
-- **⑦ユーザー一括招待実行**: ユーザー一括招待の実行
-- **⑧カスタムフィールドコピー**: カスタムフィールドのコピー
+- **②UserIDv4取得**: メールアドレスからユーザーIDをAPI v2からv4形式に変換
+- **③スペース一覧取得**: Wrikeの全スペース一覧を取得
+- **④フォルダ＆スペース一覧取得**: フォルダとプロジェクト一覧を階層構造で取得
+- **⑤Get User all user type**: システム内の全ユーザータイプとロールを取得
+- **⑤Update to Collaborator**: 複数ユーザーのロールを一括でコラボレーターに変更
+- **⑤-2 Bulk Update to Viewer**: 複数ユーザーのロールを一括でビューアーに変更し、指定グループに追加
+- **⑤-3 Email→UserID取得のみ**: メールアドレスからユーザーIDを取得のみ実行（ロール変更なし）
+- **⑥ユーザー一括招待シート作成**: ユーザー一括招待用シートの初期化と作成
+- **⑦ユーザー一括招待実行**: ユーザーの一括招待をロール割り当て付きで実行
+- **⑧スペース間のカスタムフィールドコピー**: スペース間でカスタムフィールドをコピー
+- **ログアウト**: 認証トークンをクリアしてログアウト
 
 ## 設定要件
 

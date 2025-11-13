@@ -1,7 +1,7 @@
 /**
  * Convert user IDs from API v2 to v4 format / ユーザーIDをAPI v2からv4形式に変換する
  */
-function GetUserIdv4() {
+function getUserIdv4() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const Userlist = ss.getSheetByName('Userlist');
   const useridsRange = Userlist.getRange('B2:B' + Userlist.getLastRow());
