@@ -103,7 +103,7 @@ BacklogのデータをWrikeのタスクとしてインポートするには：
    - **詳細** (説明) - オプション
    - **開始日** (開始日) - オプション（形式：YYYY/MM/DD）
    - **期限日** (期限日) - オプション（形式：YYYY/MM/DD）
-   - **コメント1, コメント2, ...** (コメント) - オプション（最大200列まで対応）
+   - **コメント1, コメント2, ...** (コメント) - オプション（最大20列まで対応）
 4. 3行目からBacklogデータを追加
 5. メニュー項目 **⑨Backlog→Wrike インポート** を使用してインポート
 
@@ -271,12 +271,11 @@ To import Backlog data as Wrike tasks:
 
 1. Create a **BacklogData** sheet in your spreadsheet
 2. In cell **B1**, paste the Wrike folder permalink where tasks should be created
-3. Add headers in row 2, including the following columns:
-   - **件名** (Title) - Required
+3. Add headers in row 2, including the following columns:s
    - **詳細** (Description) - Optional
    - **開始日** (Start Date) - Optional (format: YYYY/MM/DD)
    - **期限日** (Due Date) - Optional (format: YYYY/MM/DD)
-   - **コメント1, コメント2, ...** (Comments) - Optional (up to 200 comment columns supported)
+   - **コメント1, コメント2, ...** (Comments) - Optional (up to 20 comment columns supported)
 4. Add your Backlog data starting from row 3
 5. Use menu item **⑨Backlog→Wrike インポート** to import
 
