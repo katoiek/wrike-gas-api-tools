@@ -103,7 +103,7 @@ BacklogのデータをWrikeのタスクとしてインポートするには：
    - **詳細** (説明) - オプション
    - **開始日** (開始日) - オプション（形式：YYYY/MM/DD）
    - **期限日** (期限日) - オプション（形式：YYYY/MM/DD）
-   - **コメント1, コメント2, ...** (コメント) - オプション（最大20列まで対応）
+   - **コメント1, コメント2, ...** (コメント) - オプション（最大200列まで対応）
 4. 3行目からBacklogデータを追加
 5. メニュー項目 **⑨Backlog→Wrike インポート** を使用してインポート
 
@@ -117,7 +117,7 @@ BacklogのデータをWrikeのタスクとしてインポートするには：
 | **詳細** (説明) | タスクの説明 | タスクの説明フィールドにコピー |
 | **開始日** | タスク開始日 | 開始日と期限日の両方が存在する場合は開始日を使用、開始日のみ存在する場合は期限日にも使用、存在しない場合はWrikeのデフォルト動作 |
 | **期限日** | タスク期限日 | 両方の日付が存在する場合は期限日を使用、期限日のみ存在する場合は開始日を空にして期限日のみ設定、両方ない場合は日付を設定しない |
-| **コメント1-20** | タスクの説明 | 説明フィールドの最後に追加、形式：**【コメント#】** |
+| **コメント1-200** | タスクの説明 | 説明フィールドの最後に追加、形式：**【コメント#】** |
 
 例：
 ```
@@ -275,7 +275,7 @@ To import Backlog data as Wrike tasks:
    - **詳細** (Description) - Optional
    - **開始日** (Start Date) - Optional (format: YYYY/MM/DD)
    - **期限日** (Due Date) - Optional (format: YYYY/MM/DD)
-   - **コメント1, コメント2, ...** (Comments) - Optional (up to 20 comment columns supported)
+   - **コメント1, コメント2, ...** (Comments) - Optional (up to 200 comment columns supported)
 4. Add your Backlog data starting from row 3
 5. Use menu item **⑨Backlog→Wrike インポート** to import
 
