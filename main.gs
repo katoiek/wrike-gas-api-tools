@@ -97,6 +97,7 @@ function onOpen() {
     .addItem('⑦ユーザー一括招待実行', 'bulkInviteUsers')
     .addItem('⑧スペース間のカスタムフィールドコピー', 'showCopyCustomFieldsDialog')
     .addItem('⑨Backlog→Wrike インポート', 'ImportBacklogToWrike')
+    .addItem('⑩Get Timelog', 'GetTimelog')
     // .addItem('🔧SpaceIDテスト', 'testGetSpaceId')
     .addItem('ログアウト', 'logout')
     .addToUi();
