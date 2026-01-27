@@ -120,7 +120,7 @@ BacklogのデータをWrikeのタスクとしてインポートするには：
 | **詳細** (説明) | タスクの説明 | タスクの説明フィールドにコピー |
 | **開始日** | タスク開始日 | 開始日と期限日の両方が存在する場合は開始日を使用、開始日のみ存在する場合は期限日にも使用、存在しない場合はWrikeのデフォルト動作 |
 | **期限日** | タスク期限日 | 両方の日付が存在する場合は期限日を使用、期限日のみ存在する場合は開始日を空にして期限日のみ設定、両方ない場合は日付を設定しない |
-| **コメント1-20** | タスクの説明 | 説明フィールドの最後に追加、形式：**【コメント#】** |
+| **コメント1-200** | タスクの説明 | 説明フィールドの最後に追加、形式：**【コメント#】** |
 
 例：
 ```
@@ -278,8 +278,7 @@ To import Backlog data as Wrike tasks:
 
 1. Create a **BacklogData** sheet in your spreadsheet
 2. In cell **B1**, paste the Wrike folder permalink where tasks should be created
-3. Add headers in row 2, including the following columns:
-   - **件名** (Title) - Required
+3. Add headers in row 2, including the following columns:s
    - **詳細** (Description) - Optional
    - **開始日** (Start Date) - Optional (format: YYYY/MM/DD)
    - **期限日** (Due Date) - Optional (format: YYYY/MM/DD)
