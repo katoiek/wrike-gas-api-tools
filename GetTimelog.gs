@@ -11,7 +11,7 @@ function GetTimelog() {
 
   sheet.clear();
 
-  const headers = ['ID', 'taskId', 'taskName', 'taskLink', 'userId', 'User 名', 'trackedDate', 'hours', 'comment', 'createdDate', 'updatedDate', 'approvalStatus', 'billingType', 'lockStatus'];
+  const headers = ['TimelogId', 'taskId', 'taskName', 'taskLink', 'userId', 'User名', 'trackedDate', 'hours', 'comment', 'createdDate', 'updatedDate', 'approvalStatus', 'billingType', 'lockStatus'];
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
 
   const apiUrl = scriptProperties.getProperty('api_url');
