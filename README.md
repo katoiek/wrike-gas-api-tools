@@ -13,6 +13,7 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 - **スペース管理**: スペース一覧の取得
 - **カスタムフィールド操作**: スペース間でのカスタムフィールドのコピーと管理
 - **コンタクト管理**: 全コンタクトとユーザー情報の取得
+- **タイムログ管理**: Wrikeのタイムログデータを取得し、タスク名、ユーザー名、カテゴリー、作業時間、日付などを一覧出力
 
 ## 構成
 
@@ -39,6 +40,7 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 - **GetAllContacts.gs**: コンタクト一覧の取得
 - **Get Information about me.gs**: 現在のユーザー情報取得
 - **GetUsertypeList.gs**: ユーザータイプ一覧の取得
+- **GetTimelog.gs**: タイムログ取得機能
 
 ## セットアップ
 
@@ -56,6 +58,7 @@ Wrikeの管理タスクを自動化するためのGoogle Apps Script（GAS）ツ
 - **GetAllContacts**: コンタクト一覧出力用
 - **GetInfoAboutMe**: 現在のユーザー情報出力用
 - **GetUsertypeList**: ユーザータイプ一覧出力用
+- **GetTimeLog**: タイムログ出力用
 
 ### 2. parametersシートの設定
 
@@ -143,6 +146,7 @@ B1: https://www.wrike.com/folder/123456789
 - **⑦ユーザー一括招待実行**: ユーザーの一括招待をロール割り当て付きで実行
 - **⑧スペース間のカスタムフィールドコピー**: スペース間でカスタムフィールドをコピー
 - **⑨Backlog→Wrike インポート**: Backlogデータをタイトル、説明、開始日、期限日、コメントと共にWrikeタスクにインポート
+- **⑩タイムログ取得**: Wrikeからタイムログデータを取得し、指定されたフォーマットで出力
 - **ログアウト**: 認証トークンをクリアしてログアウト
 
 ## 設定要件
@@ -186,6 +190,7 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 - **Space Management**: Retrieve space lists
 - **Custom Field Operations**: Copy and manage custom fields between spaces
 - **Contact Management**: Retrieve all contacts and user information
+- **Timelog Management**: Retrieve Wrike timelog data, including task names, user names, categories, work hours, and dates
 
 ## Structure
 
@@ -212,6 +217,7 @@ A collection of Google Apps Script (GAS) tools for automating Wrike management t
 - **GetAllContacts.gs**: Contact list retrieval
 - **Get Information about me.gs**: Current user information retrieval
 - **GetUsertypeList.gs**: User type and role list retrieval
+- **GetTimelog.gs**: Timelog retrieval functionality
 
 ## Setup
 
@@ -229,6 +235,7 @@ Create a new Google Spreadsheet and add the following sheets:
 - **GetAllContacts**: Contact list output
 - **GetInfoAboutMe**: Current user information output
 - **GetUsertypeList**: User type list output
+- **GetTimeLog**: Timelog output
 
 ### 2. Configure Parameters Sheet
 
@@ -316,6 +323,7 @@ The following functions are available through the spreadsheet menu:
 - **⑦ユーザー一括招待実行**: Execute bulk user invitations with role assignment
 - **⑧スペース間のカスタムフィールドコピー**: Copy custom fields between spaces
 - **⑨Backlog→Wrike インポート**: Import Backlog data as Wrike tasks with start/due date and comment synchronization
+- **⑩タイムログ取得**: Retrieve timelogs from Wrike and export in a specified format
 - **ログアウト**: Logout and clear authentication token
 
 ## Configuration Requirements
