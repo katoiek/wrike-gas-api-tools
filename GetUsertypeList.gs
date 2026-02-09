@@ -37,7 +37,7 @@ function clearGetUsertypeListSheet() {
 /**
  * Get user type list from Wrike API and write to spreadsheet / Wrike APIからユーザータイプ一覧を取得してスプレッドシートに書き込む
  */
-function getUsertypeList() {
+function GetUsertypeList() {
   clearGetUsertypeListSheet();
 
   var method = '/user_types';

@@ -90,7 +90,7 @@ function onOpen() {
     .addItem('②UserIDv4取得', 'getUserIdv4')
     .addItem('③スペース一覧取得', 'getSpaceList')
     .addItem('④フォルダ＆スペース一覧取得', 'GetFolderProjectList')
-    .addItem('⑤Get User all user tipe', 'GetUsertypeList')
+    .addItem('⑤Get User all user type', 'GetUsertypeList')
     .addItem('⑤Update to Collaborator', 'updateUsertoCollaborator')
     .addItem('⑤-2 Bulk Update to Viewer', 'UpdateUsertoViewer')
     .addItem('⑥ユーザー一括招待シート作成', 'initBulkUserInviteSheet')
@@ -98,6 +98,8 @@ function onOpen() {
     .addItem('⑧スペース間のカスタムフィールドコピー', 'showCopyCustomFieldsDialog')
     .addItem('⑨Backlog→Wrike インポート', 'ImportBacklogToWrike')
     .addItem('⑩Get Timelog', 'GetTimelog')
+    .addItem('⑪全連絡先取得', 'GetAllContacts')
+    .addItem('⑫全カスタムフィールド取得', 'getAllCustomFields')
     // .addItem('🔧SpaceIDテスト', 'testGetSpaceId')
     .addItem('ログアウト', 'logout')
     .addToUi();
