@@ -11,7 +11,7 @@ function GetTimelog() {
 
   sheet.clear();
 
-  const headers = ['TimelogId', 'taskId', 'taskName', 'taskLink', 'userId', 'User名', 'trackedDate', 'hours', 'comment', 'createdDate', 'updatedDate', 'approvalStatus', 'billingType', 'lockStatus'];
+  const headers = ['TimelogId', 'taskId', 'taskName', 'taskLink', 'userId', 'User名', 'trackedDate', 'hours', 'comment', 'createdDate', 'updatedDate', 'approvalStatus', 'billingType', 'lockStatus', 'effortAllocation'];
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
 
   const apiUrl = scriptProperties.getProperty('api_url');
@@ -45,6 +45,7 @@ function GetTimelog() {
   const taskIds = [...new Set(timelogData.map(log => log.taskId))];
   const taskMap = {};
   const taskLinkMap = {};
+  const taskEffortAllocationMap = {};
 
   // Batch fetch tasks if possible, or fetch individually (Wrike API limits may apply) / 可能であればタスクを一括取得、または個別に取得（Wrike APIの制限が適用される場合があります）
   // Get multiple tasks at once: GET /tasks/{taskId1,taskId2,...} / 一度に複数のタスクを取得
@@ -52,13 +53,14 @@ function GetTimelog() {
   const batchSize = 100;
   for (let i = 0; i < taskIds.length; i += batchSize) {
     const chunk = taskIds.slice(i, i + batchSize);
-    const tasksUrl = apiUrl + '/tasks/' + chunk.join(',');
+    const tasksUrl = apiUrl + '/tasks/' + chunk.join(',') + '?fields=' + encodeURIComponent('["effortAllocation"]');
     try {
       const tasksResponse = UrlFetchApp.fetch(tasksUrl, options);
       const tasksData = JSON.parse(tasksResponse.getContentText()).data;
       tasksData.forEach(task => {
         taskMap[task.id] = task.title;
         taskLinkMap[task.id] = task.permalink;
+        taskEffortAllocationMap[task.id] = task.effortAllocation ? JSON.stringify(task.effortAllocation) : '';
       });
     } catch (e) {
       console.error('Error fetching tasks: / タスクの取得中にエラーが発生しました: ' + e.message);
@@ -81,7 +83,8 @@ function GetTimelog() {
       log.updatedDate,
       log.approvalStatus,
       log.billingType,
-      log.lockStatus
+      log.lockStatus,
+      taskEffortAllocationMap[log.taskId] || ''
     ];
   });
 
